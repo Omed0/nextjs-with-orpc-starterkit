@@ -1,0 +1,10 @@
+model File {
+    id           String   @id @default(uuid())
+    bucket       String
+    fileName     String   @unique
+    originalName String
+    createdAt    DateTime @default(now())
+    size         Int
+
+    @@map("files")
+}

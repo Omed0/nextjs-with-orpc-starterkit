@@ -1,0 +1,8 @@
+{
+  "home": {
+    "status": "API دۆخی",
+    "connected": "لە پەیوەندیدایە",
+    "disconnected": "کێشەیەک هەیە",
+    "loading": "بارکردن..."
+  }
+}
