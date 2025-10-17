@@ -19,7 +19,6 @@ import { toast } from "sonner";
 //import { convertImageToBase64 } from "@/lib/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { ErrorContext } from "better-auth/react";
 
 
 export default function SignUp() {
@@ -154,10 +153,14 @@ export default function SignUp() {
 						className="w-full"
 						disabled={loading}
 						onClick={async () => {
+							if (password !== passwordConfirmation) {
+								toast.error("Passwords do not match.");
+								return;
+							}
 							await authClient.signUp.email({
 								email,
 								password,
-								name: `${firstName} ${lastName}`,
+								name: `${firstName.trim()} ${lastName.trim()}`,
 								//image: image ? await convertImageToBase64(image) : "",
 								callbackURL: "/dashboard",
 								fetchOptions: {
@@ -166,9 +169,6 @@ export default function SignUp() {
 									},
 									onRequest: () => {
 										setLoading(true);
-									},
-									onError: (context: ErrorContext) => {
-										toast.error(context.error.message || "Something went wrong. Please try again.");
 									},
 									onSuccess: async () => {
 										toast.success("Account created successfully!");

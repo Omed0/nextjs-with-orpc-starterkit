@@ -1,4 +1,4 @@
-import { createAuthClient } from "better-auth/react";
+import { createAuthClient, type ErrorContext } from "better-auth/react";
 import {
   //usernameClient,
   //organizationClient,
@@ -7,16 +7,21 @@ import {
   emailOTPClient,
 } from "better-auth/client/plugins";
 import { env } from "@/lib/utils/env";
+import { toast } from "sonner";
 
 export const authClient = createAuthClient({
   fetchOptions: {
-    onError: async (context) => {
+    onError: async (context: ErrorContext) => {
       const { response, error } = context;
       if (response.status === 429) {
         const retryAfter = response.headers.get("X-Retry-After");
-        console.log(`Rate limit exceeded. Retry after ${retryAfter} seconds`);
+        //console.log(`Rate limit exceeded. Retry after ${retryAfter} seconds`);
+        toast.error(
+          `Too many requests. Please try again after ${retryAfter} seconds.`
+        );
       } else {
-        console.error(`${error.name}: ${error.message}`);
+        //console.error(`${error.name}: ${error.message}`);
+        toast.error(error.message || "An unexpected error occurred.");
       }
     },
   },

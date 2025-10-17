@@ -47,6 +47,7 @@ export const dbProvider = base
     try {
       return next({ context: { db } });
     } catch (error) {
+      await db.$disconnect();
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         console.error(error);
         throw errors.Prisma_Error({ message: error.message });
