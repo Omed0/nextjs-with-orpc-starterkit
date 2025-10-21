@@ -20,6 +20,9 @@ export const env = createEnv({
     S3_ACCESS_KEY: z.string().min(1),
     S3_SECRET_KEY: z.string().min(1),
     S3_USE_SSL: z.string().min(1),
+    REDIS_HOST: z.string().default("localhost"),
+    REDIS_PORT: z.string().default("6379"),
+    REDIS_PASSWORD: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -54,6 +57,9 @@ export const env = createEnv({
     S3_SECRET_KEY: process.env.S3_SECRET_KEY,
     S3_USE_SSL: process.env.S3_USE_SSL,
     NEXT_PUBLIC_S3_BUCKET_NAME: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   },
   //experimental__runtimeEnv: {
   //  NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,

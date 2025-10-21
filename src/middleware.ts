@@ -1,21 +1,26 @@
 import { getSession } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { PublicEndpoint } from "./lib/utils/utils";
 
-const PROTECTED_ENDPOINT = ["/dashboard(.*)?", "/todos(.*)?"]; // this for /dashboard and its sub-paths
+const PUBLIC_ENDPOINTS = ["/", "/venue(.*)?", "/sign-in", "/sign-up"]; // this for /venue and its sub-paths
+const startWithSign = "/sign";
 
 export default async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Check if the request is for a public endpoint
+  const isPublicEndpoint = PublicEndpoint(pathname, PUBLIC_ENDPOINTS);
+
+  // Allow access to public endpoints for unauthenticated users
+  if (isPublicEndpoint) return NextResponse.next();
+
   const session = await getSession(request.headers);
-  if (
-    !session?.user &&
-    PROTECTED_ENDPOINT.some((endpoint) =>
-      request.nextUrl.pathname.match(endpoint)
-    )
-  ) {
+  if (!session?.user && !isPublicEndpoint) {
     return NextResponse.rewrite(new URL("/sign-in", request.url));
   }
-
-  if (session?.user && request.nextUrl.pathname.includes("/sign-")) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  // Redirect to dashboard if authenticated user tries to access sign-in/sign-up pages
+  if (session?.user && startWithSign.includes(pathname)) {
+    return NextResponse.rewrite(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();

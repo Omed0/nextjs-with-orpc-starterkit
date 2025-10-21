@@ -14,7 +14,7 @@ export default function Header() {
 		{ href: "", label: "Home" },
 		{ href: "/dashboard", label: "Dashboard" },
 		{ href: "/todos", label: "Todos" },
-		{ href: "/dashboard/upload-file", label: "UploadFile" },
+		{ href: "/admin/upload-file", label: "UploadFile" },
 	]
 
 	return (

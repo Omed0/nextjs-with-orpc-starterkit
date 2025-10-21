@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from 'react'
-import { Loader } from 'lucide-react'
+import { Loader, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { File } from '@/prisma/generated/client'
 import {
@@ -15,6 +15,7 @@ import {
     type QueryObserverResult, type RefetchOptions
 } from '@tanstack/react-query'
 import { orpc } from '@/lib/orpc'
+import { Button } from '@/components/ui/button'
 
 type onUploadSuccess = {
     onUploadSuccess: () => void
@@ -92,7 +93,7 @@ export function FileItem({ file, fetchFiles }: FileItemProps) {
     return (
         <li className='relative flex items-center justify-between gap-2 border-b py-2 text-sm'>
             <button
-                className='truncate text-blue-500 hover:text-blue-600 hover:underline  '
+                className='truncate text-blue-500 hover:text-blue-600 hover:underline'
                 onClick={() => downloadFile(file)}
             >
                 {file.originalName}
@@ -101,15 +102,14 @@ export function FileItem({ file, fetchFiles }: FileItemProps) {
             <div className=' flex items-center gap-2'>
                 <span className='w-32 '>{formatBytes(file.size)}</span>
 
-                <button
-                    className='flex w-full flex-1 cursor-pointer items-center justify-center
-           rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600
-           disabled:cursor-not-allowed disabled:opacity-50'
+                <Button
+                    variant="destructive"
+                    size="icon"
                     onClick={() => deleteFile.mutate(file)}
                     disabled={!deleteFile.isIdle}
                 >
-                    Delete
-                </button>
+                    <Trash2 className='size-4' />
+                </Button>
             </div>
 
             {!deleteFile.isIdle && (
@@ -172,23 +172,25 @@ export function UploadFilesFormUI({ isLoading, fileInputRef, uploadToServer, max
     return (
         <form className='flex flex-col items-center justify-center gap-3' onSubmit={uploadToServer}>
             <h1 className='text-2xl'>File upload example using Next.js, MinIO S3, Prisma and PostgreSQL</h1>
-            <div className='flex h-16 gap-5'>
+            <div className='flex gap-5'>
                 <input
                     id='file'
                     type='file'
                     multiple
-                    className='rounded-md border p-2 py-5'
+                    className='rounded-md border p-2'
                     required
                     ref={fileInputRef}
                     disabled={isLoading}
                     title={`Maximum file size is ${formatBytes(maxFileSize)}`}
                 />
-                <button
+                <Button
+                    type='submit'
+                    size="lg"
                     disabled={isLoading}
-                    className="m-2 rounded-md bg-blue-500 px-5 py-2 hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-400"
+                    className="disabled:cursor-not-allowed disabled:bg-secondary/10 h-auto"
                 >
                     Upload
-                </button>
+                </Button>
             </div>
         </form>
     )

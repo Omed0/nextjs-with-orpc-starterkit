@@ -8,7 +8,8 @@ import {
   emailOTP,
   haveIBeenPwned,
 } from "better-auth/plugins";
-import { env } from "./utils/env";
+import { env } from "@/lib/utils/env";
+import { cache as secStorage, rateLimiters } from "@/lib/redis";
 import prisma from "@/prisma";
 import { cache } from "react";
 import { nextCookies } from "better-auth/next-js";
@@ -42,19 +43,35 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
       clientSecret: env.GITHUB_CLIENT_SECRET,
     },
   },
+  secondaryStorage: {
+    get(key) {
+      return secStorage.get(key);
+    },
+    set(key, value) {
+      return secStorage.set(key, value);
+    },
+    delete(key) {
+      secStorage.delete(key);
+    },
+  },
   rateLimit: {
-    window: 60, // time window in seconds
-    max: 50, // max requests in the window
+    window: 10, // time in milliseconds
+    max: 100, // max requests per millisecond window
+    storage: "secondary-storage",
     customRules: {
       "/sign-in/email": {
-        window: 10,
-        max: 5,
+        window: 60,
+        max: 4,
       },
+      //"/sign-in/password": {
+      //  window: 60,
+      //  max: 14,
+      //},
       "/two-factor/*": async () => {
         // custom function to return rate limit window and max
         return {
-          window: 10,
-          max: 5,
+          window: 60,
+          max: 4,
         };
       },
     },

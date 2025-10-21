@@ -1,5 +1,5 @@
 
-export default async function VenueLayout({
+export default async function DashboardLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
