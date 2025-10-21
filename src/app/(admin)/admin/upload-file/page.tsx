@@ -31,7 +31,7 @@ export default function UploadFiles() {
                 <UploadFilesS3PresignedUrl onUploadSuccess={() => refetch()} />
             </div>
             {isLoading ? (
-                <div className='flex h-80 flex-col items-center justify-center '>
+                <div className='flex h-96 items-center justify-center'>
                     <Loader className='size-8 animate-spin' />
                 </div>
             ) : (

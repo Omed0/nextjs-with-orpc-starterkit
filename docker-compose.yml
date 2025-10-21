@@ -60,9 +60,9 @@ services:
     command: >
       sh -c '
       if [ -n "$$REDIS_PASSWORD" ]; then
-        redis-server --requirepass "$$REDIS_PASSWORD" --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+        redis-server --requirepass "$$REDIS_PASSWORD" --appendonly yes --maxmemory 256mb --maxmemory-policy noeviction
       else
-        redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+        redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy noeviction
       fi
       '
     ports:
