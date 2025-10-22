@@ -7,6 +7,7 @@
 import { registerEmailWorker } from "./examples/email-queue";
 import { registerFileProcessingWorker } from "./examples/file-processing-queue";
 import { registerWebhookWorker } from "./examples/webhook-queue";
+import { registerBackupWorker } from "./examples/database-backup-queue";
 
 /**
  * Initialize all workers
@@ -20,6 +21,7 @@ export async function initializeWorkers(): Promise<void> {
     registerEmailWorker();
     registerFileProcessingWorker();
     registerWebhookWorker();
+    registerBackupWorker();
 
     console.log("✅ All BullMQ workers initialized successfully");
   } catch (error) {

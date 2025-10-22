@@ -1,6 +1,6 @@
 /**
  * Redis Type Definitions
- * 
+ *
  * This file provides type definitions and interfaces for Redis operations
  */
 
@@ -42,61 +42,6 @@ declare module "@/lib/redis" {
   }
 
   export const cache: RedisCache;
-
-  // Session exports
-  export interface SessionData {
-    userId: string;
-    email: string;
-    [key: string]: any;
-  }
-
-  export class RedisSessionManager {
-    constructor(ttl?: number);
-    set(sessionId: string, data: SessionData, ttl?: number): Promise<void>;
-    get(sessionId: string): Promise<SessionData | null>;
-    destroy(sessionId: string): Promise<void>;
-    refresh(sessionId: string, ttl?: number): Promise<boolean>;
-    exists(sessionId: string): Promise<boolean>;
-    ttl(sessionId: string): Promise<number>;
-    update(sessionId: string, updates: Partial<SessionData>): Promise<void>;
-    getUserSessions(userId: string): Promise<Record<string, SessionData>>;
-    destroyUserSessions(userId: string): Promise<number>;
-  }
-
-  export const sessionManager: RedisSessionManager;
-
-  // Rate Limiter exports
-  export interface RateLimitConfig {
-    max: number;
-    window: number;
-    namespace?: string;
-  }
-
-  export interface RateLimitResult {
-    allowed: boolean;
-    remaining: number;
-    limit: number;
-    resetIn: number;
-    resetAt: Date;
-  }
-
-  export class RateLimiter {
-    constructor(config: RateLimitConfig);
-    check(identifier: string): Promise<RateLimitResult>;
-    status(identifier: string): Promise<RateLimitResult>;
-    reset(identifier: string): Promise<void>;
-    block(identifier: string, duration: number): Promise<void>;
-    isBlocked(identifier: string): Promise<boolean>;
-    unblock(identifier: string): Promise<void>;
-  }
-
-  export function createRateLimiter(config: RateLimitConfig): RateLimiter;
-
-  export const rateLimiters: {
-    api: RateLimiter;
-    auth: RateLimiter;
-    strict: RateLimiter;
-  };
 
   // Health check exports
   export interface HealthCheckResult {

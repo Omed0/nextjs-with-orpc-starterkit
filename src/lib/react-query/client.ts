@@ -27,6 +27,8 @@ export function createQueryClient() {
           return JSON.stringify({ json, meta });
         },
         staleTime: 60 * 1000, // 1 minute stale time for queries by default (so they don't refetch on every mount)
+        refetchOnWindowFocus: false,
+        retry: process.env.NODE_ENV === "production" ? 3 : 1, // Retry failed requests twice in production, none in development
       },
       dehydrate: {
         shouldDehydrateQuery: (query) =>

@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import type { File } from "@/prisma/generated/client";
-import { sizes } from "./constant";
+import { sizes } from "@/lib/file-management/constant";
 import { client } from "@/lib/orpc";
 
 export type ShortFileProp = {

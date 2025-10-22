@@ -68,11 +68,9 @@ export const filesRoute = {
   saveFileInfo: protectedProcedure
     .input(z.custom<PresignedUrlProp[]>())
     .handler(async ({ input, context }) => {
-      const presignedUrls = input as PresignedUrlProp[];
-
       const saveFilesInfo = await context.db.file.createMany({
         skipDuplicates: true,
-        data: presignedUrls.map((file: PresignedUrlProp) => ({
+        data: input.map((file: PresignedUrlProp) => ({
           bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME,
           originalName: file.originalName,
           fileName: file.fileNameInBucket,

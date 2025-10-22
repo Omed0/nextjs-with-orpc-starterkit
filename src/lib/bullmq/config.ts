@@ -19,7 +19,7 @@ export const redisConnection: ConnectionOptions = {
  * Default queue options with best practices
  */
 export const defaultQueueOptions: Omit<QueueOptions, "connection"> = {
-    defaultJobOptions: {
+  defaultJobOptions: {
     attempts: 3, // Retry failed jobs up to 3 times
     backoff: {
       type: "exponential", // Exponential backoff between retries
@@ -65,6 +65,7 @@ export enum QueueName {
   ANALYTICS = "analytics",
   WEBHOOK = "webhook",
   CLEANUP = "cleanup",
+  DATABASE_BACKUP = "database-backup",
   DEFAULT = "default",
 }
 

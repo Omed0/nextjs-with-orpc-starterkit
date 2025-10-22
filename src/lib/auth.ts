@@ -9,7 +9,7 @@ import {
   haveIBeenPwned,
 } from "better-auth/plugins";
 import { env } from "@/lib/utils/env";
-import { cache as secStorage, rateLimiters } from "@/lib/redis";
+import { cache as secStorage } from "@/lib/redis";
 import prisma from "@/prisma";
 import { cache } from "react";
 import { nextCookies } from "better-auth/next-js";
@@ -29,7 +29,6 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
   trustedOrigins: [env.CORS_ORIGIN || ""],
   emailAndPassword: {
     enabled: true,
-
     //async sendResetPassword: async (data, request) => {
     //},
   },
@@ -82,7 +81,6 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
       maxAge: 60 * 15, // 15 minutes
     },
     storeSessionInDatabase: true,
-    //updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
   },
   plugins: [
     admin(),

@@ -52,6 +52,34 @@ export async function createPresignedUrlToDownload({
 }
 
 /**
+ * Upload file directly to S3 bucket from file path
+ * @param bucketName name of the bucket
+ * @param objectName name/path of the object in bucket
+ * @param filePath local file path
+ * @param metadata optional metadata to attach to the object
+ * @returns object name if successful
+ */
+export async function uploadFileToBucket({
+  bucketName,
+  objectName,
+  filePath,
+  metadata,
+}: {
+  bucketName: string;
+  objectName: string;
+  filePath: string;
+  metadata?: Record<string, string>;
+}) {
+  // Create bucket if it doesn't exist
+  await createBucketIfNotExists(bucketName);
+
+  // Upload from file path using fPutObject (more efficient for files)
+  await s3Client.fPutObject(bucketName, objectName, filePath, metadata);
+
+  return objectName;
+}
+
+/**
  * Delete file from S3 bucket
  * @param bucketName name of the bucket
  * @param fileName name of the file

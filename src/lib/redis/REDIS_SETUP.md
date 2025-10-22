@@ -2,7 +2,7 @@
 
 ## 🚀 What's Been Added
 
-A complete Redis integration has been added to your digital-menu project with:
+A complete Redis integration has been added to your nextjs-kit-with-orpc project with:
 
 1. **Docker Compose Configuration** - Redis 7 Alpine with persistence
 2. **Redis Client** - Singleton connection manager with auto-reconnect

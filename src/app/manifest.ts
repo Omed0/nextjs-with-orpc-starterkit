@@ -1,10 +1,11 @@
+import { env } from "@/lib/utils/env";
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "digital-menu",
-    short_name: "digital-menu",
-    description: "Digital Menu for Restaurants",
+    name: env.NEXT_PUBLIC_PROJECT_NAME,
+    short_name: `${env.NEXT_PUBLIC_PROJECT_NAME} with included examples u can fork and build on`,
+    description: "",
     start_url: "/new",
     display: "standalone",
     background_color: "#ffffff",

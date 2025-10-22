@@ -11,6 +11,7 @@ export default function LocaleSwitcher() {
     const locale = useLocale()
     const [isPending, startTransition] = useTransition();
 
+    const currentFullNameLocale = fullname_locales.find(loc => loc.code === locale);
 
     const switchLocale = (newLocale: Locale) => {
         if (newLocale !== locale) {
@@ -24,9 +25,9 @@ export default function LocaleSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button disabled={isPending} variant="outline" className="flex items-center gap-2">
+                <Button disabled={isPending} variant="outline" className="flex-2">
                     <GlobeIcon className="h-5 w-5" />
-                    <span>{locale}</span>
+                    <span>{currentFullNameLocale?.name ?? locale}</span>
                     <ChevronDownIcon className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>

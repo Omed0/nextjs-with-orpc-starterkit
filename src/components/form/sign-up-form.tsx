@@ -1,6 +1,14 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
+import * as React from "react"
+import { useForm } from "@tanstack/react-form"
+import { toast } from "sonner"
+import * as z from "zod"
+import Image from "next/image"
+import { Loader2, X } from "lucide-react"
+import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
 import {
 	Card,
 	CardContent,
@@ -8,44 +16,103 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import Image from "next/image";
-import { Loader2, X } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
-//import { convertImageToBase64 } from "@/lib/utils/utils";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/card"
+import {
+	Field,
+	FieldDescription,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { authClient } from "@/lib/auth-client"
 
+const formSchema = z
+	.object({
+		firstName: z
+			.string()
+			.min(2, "First name must be at least 2 characters.")
+			.max(50, "First name must be at most 50 characters."),
+		lastName: z
+			.string()
+			.min(2, "Last name must be at least 2 characters.")
+			.max(50, "Last name must be at most 50 characters."),
+		email: z
+			.email("Please enter a valid email address."),
+		password: z
+			.string()
+			.min(8, "Password must be at least 8 characters.")
+			.max(100, "Password must be at most 100 characters."),
+		passwordConfirmation: z
+			.string()
+			.min(1, "Please confirm your password."),
+		image: z.instanceof(File).nullable(),
+	})
+	.refine((data) => data.password === data.passwordConfirmation, {
+		message: "Passwords do not match.",
+		path: ["passwordConfirmation"],
+	})
 
 export default function SignUp() {
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [passwordConfirmation, setPasswordConfirmation] = useState("");
-	const [image, setImage] = useState<File | null>(null);
-	const [imagePreview, setImagePreview] = useState<string | null>(null);
-	const [loading, setLoading] = useState(false);
-	const router = useRouter();
+	const [loading, setLoading] = React.useState(false)
+	const [imagePreview, setImagePreview] = React.useState<string | null>(null)
 
-	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
+	const form = useForm({
+		defaultValues: {
+			firstName: "",
+			lastName: "",
+			email: "",
+			password: "",
+			passwordConfirmation: "",
+			image: null as File | null,
+		},
+		validators: {
+			onSubmit: formSchema,
+		},
+		onSubmit: async ({ value }) => {
+			await authClient.signUp.email({
+				email: value.email,
+				password: value.password,
+				name: `${value.firstName.trim()} ${value.lastName.trim()}`,
+				// image: value.image ? await convertImageToBase64(value.image) : "",
+				callbackURL: "/dashboard",
+				fetchOptions: {
+					onRequest: () => {
+						setLoading(true)
+					},
+					onResponse: () => {
+						setLoading(false)
+					},
+					onSuccess: async () => {
+						toast.success("Account created successfully!")
+					},
+				},
+			})
+		},
+	})
+
+	const handleImageChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		field: any
+	) => {
+		const file = e.target.files?.[0]
 		if (file) {
-			setImage(file);
-			const reader = new FileReader();
+			field.handleChange(file)
+			const reader = new FileReader()
 			reader.onloadend = () => {
-				setImagePreview(reader.result as string);
-			};
-			reader.readAsDataURL(file);
+				setImagePreview(reader.result as string)
+			}
+			reader.readAsDataURL(file)
 		}
-	};
+	}
+
+	const clearImage = (field: any) => {
+		field.handleChange(null)
+		setImagePreview(null)
+	}
 
 	return (
-		<Card className="z-50 rounded-md rounded-t-none max-w-md">
+		<Card className="rounded-md rounded-t-none w-md">
 			<CardHeader>
 				<CardTitle className="text-lg md:text-xl">Sign Up</CardTitle>
 				<CardDescription className="text-xs md:text-sm">
@@ -53,153 +120,201 @@ export default function SignUp() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className="grid gap-4">
-					<div className="grid grid-cols-2 gap-4">
-						<div className="grid gap-2">
-							<Label htmlFor="first-name">First name</Label>
-							<Input
-								id="first-name"
-								placeholder="Max"
-								required
-								onChange={(e) => {
-									setFirstName(e.target.value);
+				<form
+					id="sign-up-form"
+					onSubmit={(e) => {
+						e.preventDefault()
+						form.handleSubmit()
+					}}
+				>
+					<FieldGroup>
+						<div className="grid grid-cols-2 gap-4">
+							<form.Field
+								name="firstName"
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid
+									return (
+										<Field data-invalid={isInvalid}>
+											<FieldLabel htmlFor={field.name}>First name</FieldLabel>
+											<Input
+												id={field.name}
+												name={field.name}
+												value={field.state.value}
+												onBlur={field.handleBlur}
+												onChange={(e) => field.handleChange(e.target.value)}
+												aria-invalid={isInvalid}
+												placeholder="Max"
+												autoComplete="given-name"
+											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									)
 								}}
-								value={firstName}
+							/>
+							<form.Field
+								name="lastName"
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid
+									return (
+										<Field data-invalid={isInvalid}>
+											<FieldLabel htmlFor={field.name}>Last name</FieldLabel>
+											<Input
+												id={field.name}
+												name={field.name}
+												value={field.state.value}
+												onBlur={field.handleBlur}
+												onChange={(e) => field.handleChange(e.target.value)}
+												aria-invalid={isInvalid}
+												placeholder="Robinson"
+												autoComplete="family-name"
+											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									)
+								}}
 							/>
 						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="last-name">Last name</Label>
-							<Input
-								id="last-name"
-								placeholder="Robinson"
-								required
-								onChange={(e) => {
-									setLastName(e.target.value);
-								}}
-								value={lastName}
-							/>
-						</div>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="email">Email</Label>
-						<Input
-							id="email"
-							type="email"
-							placeholder="m@example.com"
-							required
-							onChange={(e) => {
-								setEmail(e.target.value);
+						<form.Field
+							name="email"
+							children={(field) => {
+								const isInvalid =
+									field.state.meta.isTouched && !field.state.meta.isValid
+								return (
+									<Field data-invalid={isInvalid}>
+										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
+										<Input
+											id={field.name}
+											name={field.name}
+											type="email"
+											value={field.state.value}
+											onBlur={field.handleBlur}
+											onChange={(e) => field.handleChange(e.target.value)}
+											aria-invalid={isInvalid}
+											placeholder="m@example.com"
+											autoComplete="email"
+										/>
+										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+									</Field>
+								)
 							}}
-							value={email}
 						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="password">Password</Label>
-						<Input
-							id="password"
-							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							autoComplete="new-password"
-							placeholder="Password"
+						<form.Field
+							name="password"
+							children={(field) => {
+								const isInvalid =
+									field.state.meta.isTouched && !field.state.meta.isValid
+								return (
+									<Field data-invalid={isInvalid}>
+										<FieldLabel htmlFor={field.name}>Password</FieldLabel>
+										<Input
+											id={field.name}
+											name={field.name}
+											type="password"
+											value={field.state.value}
+											onBlur={field.handleBlur}
+											onChange={(e) => field.handleChange(e.target.value)}
+											aria-invalid={isInvalid}
+											placeholder="Password"
+											autoComplete="new-password"
+										/>
+										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+									</Field>
+								)
+							}}
 						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="password">Confirm Password</Label>
-						<Input
-							id="password_confirmation"
-							type="password"
-							value={passwordConfirmation}
-							onChange={(e) => setPasswordConfirmation(e.target.value)}
-							autoComplete="new-password"
-							placeholder="Confirm Password"
+						<form.Field
+							name="passwordConfirmation"
+							children={(field) => {
+								const isInvalid =
+									field.state.meta.isTouched && !field.state.meta.isValid
+								return (
+									<Field data-invalid={isInvalid}>
+										<FieldLabel htmlFor={field.name}>
+											Confirm Password
+										</FieldLabel>
+										<Input
+											id={field.name}
+											name={field.name}
+											type="password"
+											value={field.state.value}
+											onBlur={field.handleBlur}
+											onChange={(e) => field.handleChange(e.target.value)}
+											aria-invalid={isInvalid}
+											placeholder="Confirm Password"
+											autoComplete="new-password"
+										/>
+										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+									</Field>
+								)
+							}}
 						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="image">Profile Image (optional)</Label>
-						<div className="flex items-end gap-4">
-							{imagePreview && (
-								<div className="relative w-16 h-16 rounded-sm overflow-hidden">
-									<Image
-										src={imagePreview}
-										alt="Profile preview"
-										layout="fill"
-										objectFit="cover"
-									/>
-								</div>
+						<form.Field
+							name="image"
+							children={(field) => (
+								<Field>
+									<FieldLabel htmlFor={field.name}>
+										Profile Image (optional)
+									</FieldLabel>
+									<div className="flex items-end gap-4">
+										{imagePreview && (
+											<div className="relative w-16 h-16 rounded-sm overflow-hidden">
+												<Image
+													src={imagePreview}
+													alt="Profile preview"
+													fill
+													className="object-cover"
+												/>
+											</div>
+										)}
+										<div className="flex items-center gap-2 w-full">
+											<Input
+												id={field.name}
+												name={field.name}
+												type="file"
+												accept="image/*"
+												onChange={(e) => handleImageChange(e, field)}
+												className="w-full"
+											/>
+											{imagePreview && (
+												<X
+													className="cursor-pointer"
+													onClick={() => clearImage(field)}
+												/>
+											)}
+										</div>
+									</div>
+									<FieldDescription>
+										Upload a profile picture to personalize your account.
+									</FieldDescription>
+								</Field>
 							)}
-							<div className="flex items-center gap-2 w-full">
-								<Input
-									id="image"
-									type="file"
-									accept="image/*"
-									onChange={handleImageChange}
-									className="w-full"
-								/>
-								{imagePreview && (
-									<X
-										className="cursor-pointer"
-										onClick={() => {
-											setImage(null);
-											setImagePreview(null);
-										}}
-									/>
-								)}
-							</div>
-						</div>
-					</div>
-					<Button
-						type="submit"
-						className="w-full"
-						disabled={loading}
-						onClick={async () => {
-							if (password !== passwordConfirmation) {
-								toast.error("Passwords do not match.");
-								return;
-							}
-							await authClient.signUp.email({
-								email,
-								password,
-								name: `${firstName.trim()} ${lastName.trim()}`,
-								//image: image ? await convertImageToBase64(image) : "",
-								callbackURL: "/dashboard",
-								fetchOptions: {
-									onResponse: () => {
-										setLoading(false);
-									},
-									onRequest: () => {
-										setLoading(true);
-									},
-									onSuccess: async () => {
-										toast.success("Account created successfully!");
-										router.push("/dashboard");
-									},
-								},
-							});
-						}}
-					>
-						{loading ? (
-							<Loader2 size={16} className="animate-spin" />
-						) : (
-							"Create an account"
-						)}
-					</Button>
-				</div>
+						/>
+						<Button type="submit" className="w-full" disabled={loading}>
+							{loading ? (
+								<Loader2 size={16} className="animate-spin" />
+							) : (
+								"Create an account"
+							)}
+						</Button>
+					</FieldGroup>
+				</form>
 			</CardContent>
 			<CardFooter>
 				<div className="flex justify-center w-full border-t py-4">
 					<p className="text-center text-sm text-neutral-500">
-						<Link
-							//prefetch
-							href="/sign-in"
-							className="underline hover:text-primary/85"
-						>
+						<Link href="/sign-in" className="underline hover:text-primary/85">
 							Already have an account? Sign In
 						</Link>
 					</p>
 				</div>
 			</CardFooter>
 		</Card>
-	);
+	)
 }
 

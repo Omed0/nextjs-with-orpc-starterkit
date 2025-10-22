@@ -1,48 +1,48 @@
 "use client";
 
-import { ModeToggle } from "./mode-toggle";
-import UserMenu from "./user-menu";
-import LocaleSwitcher from "./locale-switcher";
-import { Suspense } from "react";
-import { Button } from "../ui/button";
-import { GlobeIcon } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { env } from "@/lib/utils/env";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function Header() {
-	const links: { href: string; label: string; }[] = [
-		{ href: "", label: "Home" },
-		{ href: "/dashboard", label: "Dashboard" },
-		{ href: "/todos", label: "Todos" },
-		{ href: "/admin/upload-file", label: "UploadFile" },
-	]
+	const { isPending, data } = authClient.useSession();
+
+	const user = data?.user;
+	const initials = user?.name.charAt(0) || "U";
 
 	return (
-		<div>
-			<div className="flex flex-row items-center justify-between px-2 py-1">
-				<nav className="flex gap-4 text-lg">
-					{links.map(({ href, label }) => {
-						const url = new URL(href, env.NEXT_PUBLIC_SERVER_URL);
-						return (
-							<Link key={label} href={url}>
-								{label}
-							</Link>
-						);
-					})}
-				</nav>
-				<div className="flex items-center gap-2">
-					<Suspense fallback={
-						<Button variant="outline" className="flex items-center gap-2">
-							<GlobeIcon className="h-5 w-5" />
-						</Button>
-					}>
-						<LocaleSwitcher />
-					</Suspense>
-					<ModeToggle />
-					<UserMenu />
+		<header className="w-full sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+			<div className="flex-1 h-14 flex items-center justify-between gap-4 px-4">
+				{/* Mobile sidebar trigger */}
+				<SidebarTrigger className="-ml-1" />
+
+				{/* Right side actions - visible on all screen sizes */}
+				<div className="flex justify-end font-medium text-lg">
+					{isPending ? (
+						<Skeleton className="h-9 w-20" />
+					) : user ? (
+						<div className="flex gap-2 items-center">
+							<Avatar>
+								<AvatarImage
+									src={user?.image || undefined}
+									alt={user?.name || "User Avatar"}
+								/>
+								<AvatarFallback>
+									{initials}
+								</AvatarFallback>
+							</Avatar>
+							<span>{user?.name.split(" ")[0]}</span>
+						</div>
+					) : (
+						<Link href="/sign-in" className={buttonVariants()}>
+							Sign In
+						</Link>
+					)}
 				</div>
 			</div>
-			<hr />
-		</div>
+		</header>
 	);
 }

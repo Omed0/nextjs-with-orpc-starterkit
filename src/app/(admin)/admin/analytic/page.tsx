@@ -1,7 +1,5 @@
-
+import { AnalyticsManager } from "@/components/analytics";
 
 export default function AnalyticsPage() {
-    return (
-        <div>AnalyticsPage</div>
-    )
+    return <AnalyticsManager />;
 }

@@ -6,7 +6,7 @@ export default async function AdminLayout({
 }>) {
 
     return (
-        <main>
+        <main className="p-2">
             {children}
         </main>
     );

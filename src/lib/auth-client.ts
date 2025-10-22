@@ -6,7 +6,7 @@ import {
   magicLinkClient,
   emailOTPClient,
 } from "better-auth/client/plugins";
-import { env } from "a/lib/utils/env";
+import { env } from "@/lib/utils/env";
 import { toast } from "sonner";
 
 export const authClient = createAuthClient({

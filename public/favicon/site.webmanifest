@@ -1,6 +1,6 @@
 {
-  "name": "digital-menu",
-  "short_name": "digital-menu",
+  "name": "nextjs-kit-with-orpc",
+  "short_name": "nextjs-kit-with-orpc",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

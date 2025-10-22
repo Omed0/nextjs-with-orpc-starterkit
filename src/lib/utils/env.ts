@@ -8,7 +8,7 @@ export const env = createEnv({
    */
   server: {
     CORS_ORIGIN: z.string().min(1),
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     APP_NAME: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(1),
     GITHUB_CLIENT_ID: z.string().min(1),
@@ -23,6 +23,7 @@ export const env = createEnv({
     REDIS_HOST: z.string().default("localhost"),
     REDIS_PORT: z.string().default("6379"),
     REDIS_PASSWORD: z.string().optional(),
+    POSTHOG_PERSONAL_API_KEY: z.string().min(1),
   },
   /*
    * Environment variables available on the client (and server).
@@ -32,6 +33,11 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_SERVER_URL: z.string().min(1),
     NEXT_PUBLIC_S3_BUCKET_NAME: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_HOST: z.url(),
+    NEXT_PUBLIC_POSTHOG_API_HOST: z.url(),
+    NEXT_PUBLIC_POSTHOG_PROJECT_ID: z.string().min(1),
+    NEXT_PUBLIC_PROJECT_NAME: z.string().min(1),
   },
   /*
    * Specify what values should be validated by your schemas above.
@@ -46,6 +52,7 @@ export const env = createEnv({
     CORS_ORIGIN: process.env.CORS_ORIGIN,
     DATABASE_URL: process.env.DATABASE_URL,
     APP_NAME: process.env.APP_NAME,
+    NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
@@ -60,6 +67,11 @@ export const env = createEnv({
     REDIS_HOST: process.env.REDIS_HOST,
     REDIS_PORT: process.env.REDIS_PORT,
     REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    NEXT_PUBLIC_POSTHOG_API_HOST: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+    NEXT_PUBLIC_POSTHOG_PROJECT_ID: process.env.NEXT_PUBLIC_POSTHOG_PROJECT_ID,
+    POSTHOG_PERSONAL_API_KEY: process.env.POSTHOG_PERSONAL_API_KEY,
   },
   //experimental__runtimeEnv: {
   //  NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,

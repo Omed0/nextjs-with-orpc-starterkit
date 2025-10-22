@@ -15,5 +15,13 @@ if (isEnabled && !posthog.__loaded) {
     capture_pageleave: true, // This enables capturing pageleave events, set to false if you don't want this
     capture_performance: true, // This enables capturing performance events, set to false if you don't want this
     debug: process.env.NODE_ENV === "development",
+    fetch_options: {
+      cache: "force-cache", // Use Next.js cache
+      next_options: {
+        // Passed to the `next` option for `fetch`
+        revalidate: 60, // Cache for 60 seconds
+        tags: ["posthog"], // Can be used with Next.js `revalidateTag` function
+      },
+    },
   });
 }

@@ -1,6 +1,6 @@
 /**
  * Example: Recurring Jobs
- * 
+ *
  * Demonstrates how to create scheduled and recurring jobs
  */
 
@@ -99,11 +99,11 @@ export async function scheduleDelayedNotification(
  */
 export async function removeRecurringJob(queueName: QueueName, jobKey: string) {
   const queue = queueManager.getQueue(queueName);
-  const repeatableJobs = await queue.getRepeatableJobs();
+  const repeatableJobs = await queue.getJobSchedulers();
 
   for (const job of repeatableJobs) {
     if (job.key.includes(jobKey)) {
-      await queue.removeRepeatableByKey(job.key);
+      await queue.removeJobScheduler(job.key);
     }
   }
 }
@@ -113,24 +113,24 @@ export async function removeRecurringJob(queueName: QueueName, jobKey: string) {
  */
 export async function getRecurringJobs(queueName: QueueName) {
   const queue = queueManager.getQueue(queueName);
-  return await queue.getRepeatableJobs();
+  return await queue.getJobSchedulers();
 }
 
 /**
  * Example usage:
- * 
+ *
  * // Schedule recurring jobs on app startup
  * await scheduleCleanupJob();
  * await scheduleAnalyticsAggregation();
  * await scheduleWeeklyExport();
- * 
+ *
  * // Schedule a delayed notification
  * await scheduleDelayedNotification(
  *   'user-123',
  *   'Your trial ends in 3 days',
  *   259200000 // 3 days in milliseconds
  * );
- * 
+ *
  * // Remove a recurring job
  * await removeRecurringJob(QueueName.CLEANUP, 'daily-cleanup');
  */
