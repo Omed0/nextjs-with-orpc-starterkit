@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import * as z from "zod"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -37,6 +38,7 @@ const formSchema = z.object({
 })
 
 export default function SignIn() {
+	const t = useTranslations('auth');
 	const [loading, setLoading] = React.useState(false)
 	const [socialLoading, setSocialLoading] = React.useState(false)
 
@@ -100,9 +102,9 @@ export default function SignIn() {
 	return (
 		<Card className="w-md">
 			<CardHeader>
-				<CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
+				<CardTitle className="text-lg md:text-xl">{t('signIn')}</CardTitle>
 				<CardDescription className="text-xs md:text-sm">
-					Enter your email below to login to your account
+					{t('signInDescription')}
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -121,7 +123,7 @@ export default function SignIn() {
 									field.state.meta.isTouched && !field.state.meta.isValid
 								return (
 									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
+										<FieldLabel htmlFor={field.name}>{t('email')}</FieldLabel>
 										<Input
 											id={field.name}
 											name={field.name}
@@ -146,12 +148,12 @@ export default function SignIn() {
 								return (
 									<Field data-invalid={isInvalid}>
 										<div className="flex items-center">
-											<FieldLabel htmlFor={field.name}>Password</FieldLabel>
+											<FieldLabel htmlFor={field.name}>{t('password')}</FieldLabel>
 											<Link
 												href="#"
 												className="ml-auto inline-block text-sm underline"
 											>
-												Forgot your password?
+												{t('forgotPassword')}
 											</Link>
 										</div>
 										<Input
@@ -181,7 +183,7 @@ export default function SignIn() {
 											field.handleChange(checked === true)
 										}
 									/>
-									<FieldLabel htmlFor="remember">Remember me</FieldLabel>
+									<FieldLabel htmlFor="remember">{t('rememberMe')}</FieldLabel>
 								</div>
 							)}
 						/>
@@ -193,7 +195,7 @@ export default function SignIn() {
 							{loading ? (
 								<Loader2 size={16} className="animate-spin" />
 							) : (
-								"Login"
+								t('signIn')
 							)}
 						</Button>
 						<div className="w-full flex items-center gap-4">
@@ -257,7 +259,7 @@ export default function SignIn() {
 				<div className="flex justify-center w-full border-t py-4">
 					<p className="text-center text-sm text-neutral-500">
 						<Link href="/sign-up" className="underline hover:text-primary/85">
-							Need an account? Sign Up
+							{t('noAccount')} {t('signUp')}
 						</Link>
 					</p>
 				</div>

@@ -7,7 +7,7 @@ import { createQueryClient } from "@/lib/react-query/client";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { useLocale } from "next-intl";
 import { isRTLLocale } from "@/i18n/config";
-import { cn } from "../utils/utils";
+import { cn } from "@/lib/utils/utils";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
 	const [queryClient] = useState(() => createQueryClient())
@@ -22,7 +22,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 				disableTransitionOnChange
 			>
 				<div
-					className={cn(isRTLLocale(locale) ? "font-speda" : "font-mono")}
+					className={cn(isRTLLocale(locale) ? "font-rabar" : "font-mono")}
 					dir={isRTLLocale(locale) ? "rtl" : "ltr"}
 				>
 					{children}

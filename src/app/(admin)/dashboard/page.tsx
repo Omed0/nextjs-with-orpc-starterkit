@@ -14,8 +14,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export default async function Dashboard() {
+	const t = await getTranslations('dashboard');
 	const [sessions, privateData] = await Promise.all([
 		client.session(),
 		client.privateData(),
@@ -53,15 +55,15 @@ export default async function Dashboard() {
 				<div className="space-y-2">
 					<div className="space-y-1">
 						<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-							Welcome back, {user.name}! 👋
+							{t('welcomeBack')}, {user.name}! 👋
 						</h1>
 						<p className="text-sm sm:text-base text-muted-foreground">
-							Here's what's happening with your system today
+							{t('happeningToday')}
 						</p>
 					</div>
 
 					{/* ASCII Art Banner */}
-					<Card dir="ltr" className="bg-gradient-to-br from-primary/5 via-primary/10 to-background border-primary/20 font-mono text-center">
+					<Card dir="ltr" className="bg-gradient-to-br from-primary/5 via-primary/10 to-background border-primary/20 text-center">
 						<CardContent>
 							{/* Make ASCII responsive and allow horizontal scrolling on very small screens */}
 							<pre className="text-[6px] sm:text-[8px] md:text-xs lg:text-sm leading-tight text-primary overflow-x-auto whitespace-pre">
@@ -77,18 +79,18 @@ export default async function Dashboard() {
 				{/* Quick Actions */}
 				<Card>
 					<CardHeader>
-						<CardTitle>Quick Actions</CardTitle>
+						<CardTitle>{t('quickActions')}</CardTitle>
 						<CardDescription>
-							Common tasks and shortcuts
+							{t('quickActionsDescription')}
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						{/* Responsive grid: 1 col mobile, 2 cols small, 3 cols md, 4 cols lg */}
 						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-							<QuickAction title="View Analytics" href="/admin/analytic" Icon={BarChart3} />
-							<QuickAction title="Manage Files" href="/admin/upload-file" Icon={FileText} />
-							<QuickAction title="Check Queues" href="/admin/queues" Icon={Activity} />
-							<QuickAction title="View Todos" href="/todos" Icon={Users} />
+							<QuickAction title={t('viewAnalytics')} href="/admin/analytic" Icon={BarChart3} />
+							<QuickAction title={t('manageFiles')} href="/admin/upload-file" Icon={FileText} />
+							<QuickAction title={t('checkQueues')} href="/admin/queues" Icon={Activity} />
+							<QuickAction title={t('viewTodos')} href="/todos" Icon={Users} />
 						</div>
 					</CardContent>
 				</Card>

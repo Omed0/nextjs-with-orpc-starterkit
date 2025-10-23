@@ -32,7 +32,7 @@ export default async function Home() {
 		<div className="container mx-auto max-w-3xl px-4 py-2">
 			<pre
 				dir="ltr"
-				className="text-[6px] sm:text-[8px] md:text-xs lg:text-sm leading-tight text-primary overflow-x-auto whitespace-pre">
+				className="text-[6px] sm:text-[8px] md:text-xs lg:text-sm leading-tight text-primary overflow-x-auto whitespace-pre text-center">
 				{asciiArt}
 			</pre>
 			<div className="grid gap-6">

@@ -9,8 +9,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { User, Mail, Shield, Calendar } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from "next/cache";
 
 export default async function AdminProfile() {
+    const t = await getTranslations('admin');
     const user = (await client.session()).session.user;
 
     const initials = user.name.charAt(0) || "U";
@@ -20,9 +23,9 @@ export default async function AdminProfile() {
             <div className="space-y-8">
                 {/* Page Header */}
                 <div className="space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight">Admin Profile</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">{t('profile')}</h1>
                     <p className="text-muted-foreground">
-                        Manage your account settings and preferences
+                        {t('profileDescription')}
                     </p>
                 </div>
 
@@ -30,9 +33,9 @@ export default async function AdminProfile() {
                     {/* Profile Card */}
                     <Card className="md:col-span-2">
                         <CardHeader>
-                            <CardTitle>Profile Information</CardTitle>
+                            <CardTitle>{t('profileInfo')}</CardTitle>
                             <CardDescription>
-                                Your personal account details and role
+                                {t('profileInfoDescription')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -47,9 +50,9 @@ export default async function AdminProfile() {
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <User className="h-4 w-4 text-muted-foreground" />
-                                            <div>w
+                                            <div>
                                                 <p className="text-sm font-medium text-muted-foreground">
-                                                    Full Name
+                                                    {t('fullName')}
                                                 </p>
                                                 <p className="text-base font-semibold">{user.name}</p>
                                             </div>
@@ -58,7 +61,7 @@ export default async function AdminProfile() {
                                             <Mail className="h-4 w-4 text-muted-foreground" />
                                             <div>
                                                 <p className="text-sm font-medium text-muted-foreground">
-                                                    Email Address
+                                                    {t('emailAddress')}
                                                 </p>
                                                 <p className="text-base font-semibold">{user.email}</p>
                                             </div>
@@ -67,10 +70,10 @@ export default async function AdminProfile() {
                                             <Shield className="h-4 w-4 text-muted-foreground" />
                                             <div>
                                                 <p className="text-sm font-medium text-muted-foreground">
-                                                    Role
+                                                    {t('role')}
                                                 </p>
                                                 <Badge variant="default" className="mt-1">
-                                                    Administrator
+                                                    {t('administrator')}
                                                 </Badge>
                                             </div>
                                         </div>
@@ -83,31 +86,31 @@ export default async function AdminProfile() {
                     {/* Quick Stats Card */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Account Status</CardTitle>
-                            <CardDescription>Current account information</CardDescription>
+                            <CardTitle>{t('accountStatus')}</CardTitle>
+                            <CardDescription>{t('accountStatus')}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 <p className="text-sm font-medium text-muted-foreground">
-                                    Account Type
+                                    {t('accountType')}
                                 </p>
                                 <Badge variant="secondary" className="text-sm">
-                                    Premium Admin
+                                    {t('premiumAdmin')}
                                 </Badge>
                             </div>
                             <div className="space-y-2">
                                 <p className="text-sm font-medium text-muted-foreground">
-                                    Status
+                                    {t('status')}
                                 </p>
                                 <Badge variant="secondary" className="text-sm bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                                    Active
+                                    {t('active')}
                                 </Badge>
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <Calendar className="h-4 w-4 text-muted-foreground" />
                                     <p className="text-sm font-medium text-muted-foreground">
-                                        Member Since
+                                        {t('memberSince')}
                                     </p>
                                 </div>
                                 <p className="text-sm font-semibold">

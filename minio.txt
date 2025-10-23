@@ -1,0 +1,1 @@
+http://localhost:9001/login with minio credential you setup in .env you can look bucket storage

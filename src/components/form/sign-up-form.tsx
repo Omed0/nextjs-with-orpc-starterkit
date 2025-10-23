@@ -7,6 +7,7 @@ import * as z from "zod"
 import Image from "next/image"
 import { Loader2, X } from "lucide-react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -54,6 +55,7 @@ const formSchema = z
 	})
 
 export default function SignUp() {
+	const t = useTranslations('auth');
 	const [loading, setLoading] = React.useState(false)
 	const [imagePreview, setImagePreview] = React.useState<string | null>(null)
 
@@ -114,9 +116,9 @@ export default function SignUp() {
 	return (
 		<Card className="rounded-md rounded-t-none w-md">
 			<CardHeader>
-				<CardTitle className="text-lg md:text-xl">Sign Up</CardTitle>
+				<CardTitle className="text-lg md:text-xl">{t('signUp')}</CardTitle>
 				<CardDescription className="text-xs md:text-sm">
-					Enter your information to create an account
+					{t('signUpDescription')}
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -136,7 +138,7 @@ export default function SignUp() {
 										field.state.meta.isTouched && !field.state.meta.isValid
 									return (
 										<Field data-invalid={isInvalid}>
-											<FieldLabel htmlFor={field.name}>First name</FieldLabel>
+											<FieldLabel htmlFor={field.name}>{t('firstName')}</FieldLabel>
 											<Input
 												id={field.name}
 												name={field.name}
@@ -161,7 +163,7 @@ export default function SignUp() {
 										field.state.meta.isTouched && !field.state.meta.isValid
 									return (
 										<Field data-invalid={isInvalid}>
-											<FieldLabel htmlFor={field.name}>Last name</FieldLabel>
+											<FieldLabel htmlFor={field.name}>{t('lastName')}</FieldLabel>
 											<Input
 												id={field.name}
 												name={field.name}
@@ -187,7 +189,7 @@ export default function SignUp() {
 									field.state.meta.isTouched && !field.state.meta.isValid
 								return (
 									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
+										<FieldLabel htmlFor={field.name}>{t('email')}</FieldLabel>
 										<Input
 											id={field.name}
 											name={field.name}
@@ -211,7 +213,7 @@ export default function SignUp() {
 									field.state.meta.isTouched && !field.state.meta.isValid
 								return (
 									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Password</FieldLabel>
+										<FieldLabel htmlFor={field.name}>{t('password')}</FieldLabel>
 										<Input
 											id={field.name}
 											name={field.name}
@@ -236,7 +238,7 @@ export default function SignUp() {
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>
-											Confirm Password
+											{t('confirmPassword')}
 										</FieldLabel>
 										<Input
 											id={field.name}
@@ -259,7 +261,7 @@ export default function SignUp() {
 							children={(field) => (
 								<Field>
 									<FieldLabel htmlFor={field.name}>
-										Profile Image (optional)
+										{t('profileImage')}
 									</FieldLabel>
 									<div className="flex items-end gap-4">
 										{imagePreview && (
@@ -299,7 +301,7 @@ export default function SignUp() {
 							{loading ? (
 								<Loader2 size={16} className="animate-spin" />
 							) : (
-								"Create an account"
+								t('signUp')
 							)}
 						</Button>
 					</FieldGroup>
@@ -309,7 +311,7 @@ export default function SignUp() {
 				<div className="flex justify-center w-full border-t py-4">
 					<p className="text-center text-sm text-neutral-500">
 						<Link href="/sign-in" className="underline hover:text-primary/85">
-							Already have an account? Sign In
+							{t('haveAccount')} {t('signIn')}
 						</Link>
 					</p>
 				</div>

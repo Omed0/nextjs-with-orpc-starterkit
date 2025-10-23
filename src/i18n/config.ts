@@ -1,7 +1,7 @@
 export type Locale = (typeof locales)[number];
 
 export const locales = ["ckb", "en", "ar"] as const;
-export const defaultLocale: Locale = "ckb";
+export const defaultLocale: Locale = "en"; // the ui nice with en,
 
 // Define RTL locales
 const rtlLocales: Locale[] = ["ckb", "ar"];
@@ -13,8 +13,8 @@ export const isRTLLocale = (locale: string) =>
 export const COOKIE_NAME = "NEXT_LOCALE";
 
 export const fullname_locales = [
-  { code: "ckb", name: "کوردی" },
-  { code: "en", name: "English" },
-  { code: "ar", name: "العربية" },
+  { code: "ckb", name: "کوردی", font: "font-rabar" },
+  { code: "ar", name: "العربية", font: "font-rabar" },
+  { code: "en", name: "English", font: "font-geist-sans" },
   // Add more locales as needed
 ] as const;

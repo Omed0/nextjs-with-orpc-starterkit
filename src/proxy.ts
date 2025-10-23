@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const notLetGoIfAuth = ["/sign-in", "/sign-up"];
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const session = await getSession(request.headers);
@@ -20,7 +20,7 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  runtime: "nodejs",
+  //runtime: "nodejs", // in next16 proxy by default runs in nodejs;
   matcher: [
     "/((?!api/auth|trpc|_vercel|_next/static|_next/image|favicon.ico).+)", // this means all paths except the ones starting with /api/auth, /trpc, /_vercel, /_next/static, /_next/image, favicon.ico
   ],

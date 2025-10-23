@@ -1,27 +1,28 @@
-import { Geist, Ubuntu_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
-const speda = localFont({
+const rabar = localFont({
   src: [
-    { path: "../../../public/fonts/Speda-Bold.ttf", weight: "700" },
-    { path: "../../../public/fonts/Speda.ttf", weight: "400" },
+    { path: "../../../public/fonts/rabar_15.ttf" },
+    {
+      path: "../../../public/fonts/rabar_37.ttf",
+    },
   ],
   fallback: ["monospace", "sans-serif"],
-  variable: "--font-speda",
+  variable: "--font-rabar",
 });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   fallback: ["sans-serif"],
-  weight: ["300", "400", "700"],
 });
 
-const geistMono = Ubuntu_Mono({
-  variable: "--font-ubuntu-mono",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   fallback: ["monospace"],
-  weight: ["400", "700"],
 });
 
-export default { geistSans, geistMono, speda };
+export default { geistSans, geistMono, rabar };
+  

@@ -2,6 +2,7 @@ import "@/lib/orpc.server";
 
 import Providers from "@/lib/react-query/providers";
 import fonts from "@/lib/utils/font";
+import { Suspense } from "react";
 import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "@/components/ui/sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";

@@ -33,7 +33,11 @@ export default function LocaleSwitcher() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
                 {fullname_locales.map((loc) => (
-                    <DropdownMenuItem key={loc.code} onClick={() => switchLocale(loc.code)}>
+                    <DropdownMenuItem
+                        onClick={() => switchLocale(loc.code)}
+                        className={loc.font}
+                        key={loc.code}
+                    >
                         {loc.name}
                         {loc.code === locale && <CheckIcon className="h-5 w-5" />}
                     </DropdownMenuItem>

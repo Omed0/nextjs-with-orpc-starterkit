@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Loader2, Trash2, CheckCircle2, Circle } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -47,11 +48,10 @@ function TodoItem({ todo, onToggle, onDelete, isLoading }: TodoItemProps) {
 				/>
 				<label
 					htmlFor={`todo-${todo.id}`}
-					className={`flex-1 text-sm font-medium cursor-pointer select-none transition-all ${
-						todo.completed
+					className={`flex-1 text-sm font-medium cursor-pointer select-none transition-all ${todo.completed
 							? "text-muted-foreground line-through"
 							: "text-foreground"
-					}`}
+						}`}
 				>
 					{todo.text}
 				</label>

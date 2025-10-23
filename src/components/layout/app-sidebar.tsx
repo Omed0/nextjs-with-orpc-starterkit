@@ -31,51 +31,52 @@ import UserMenu from "./user-menu";
 import LocaleSwitcher from "./locale-switcher";
 import { Separator } from "@/components/ui/separator";
 import { env } from "@/lib/utils/env";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { isRTLLocale } from "@/i18n/config";
-
-// Menu items configuration
-const menuItems = [
-    {
-        title: "Home",
-        url: "/",
-        icon: Home,
-    },
-    {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: LayoutDashboard,
-    },
-    {
-        title: "Todos",
-        url: "/todos",
-        icon: ListTodo,
-    },
-    {
-        title: "Upload File",
-        url: "/admin/upload-file",
-        icon: Upload,
-    },
-    {
-        title: "Analytics",
-        url: "/admin/analytic",
-        icon: BarChart3,
-    },
-    {
-        title: "Backup",
-        url: "/admin/backup",
-        icon: Database,
-    },
-    {
-        title: "Queues",
-        url: "/admin/queues",
-        icon: Layers,
-    },
-];
 
 export function AppSidebar() {
     const pathname = usePathname();
     const locale = useLocale();
+    const t = useTranslations('navigation');
+
+    // Menu items configuration with translation keys
+    const menuItems = [
+        {
+            titleKey: "home",
+            url: "/",
+            icon: Home,
+        },
+        {
+            titleKey: "dashboard",
+            url: "/dashboard",
+            icon: LayoutDashboard,
+        },
+        {
+            titleKey: "todos",
+            url: "/todos",
+            icon: ListTodo,
+        },
+        {
+            titleKey: "uploadFile",
+            url: "/admin/upload-file",
+            icon: Upload,
+        },
+        {
+            titleKey: "analytics",
+            url: "/admin/analytic",
+            icon: BarChart3,
+        },
+        {
+            titleKey: "backup",
+            url: "/admin/backup",
+            icon: Database,
+        },
+        {
+            titleKey: "queues",
+            url: "/admin/queues",
+            icon: Layers,
+        },
+    ];
 
     return (
         <Sidebar side={isRTLLocale(locale) ? "right" : "left"}>
@@ -90,17 +91,17 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+                    <SidebarGroupLabel>{t('navigation')}</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {menuItems.map((item) => {
                                 const isActive = pathname === item.url;
                                 return (
-                                    <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuItem key={item.titleKey}>
                                         <SidebarMenuButton asChild isActive={isActive}>
                                             <Link href={item.url as any}>
                                                 <item.icon className="h-4 w-4" />
-                                                <span>{item.title}</span>
+                                                <span>{t(item.titleKey)}</span>
                                             </Link>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>

@@ -144,8 +144,8 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-ubuntu-mono);
-  --font-speda: var(--font-speda);
+  --font-mono: var(--font-geist-mono);
+  --font-rabar: var(--font-rabar);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
