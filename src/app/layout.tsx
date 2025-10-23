@@ -1,7 +1,7 @@
 import "@/lib/orpc.server";
 
 import Providers from "@/lib/react-query/providers";
-import { geistMono, geistSans } from "@/lib/utils/font";
+import fonts from "@/lib/utils/font";
 import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "@/components/ui/sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -16,16 +16,21 @@ export const metadata: Metadata = {
 	description: "A bundle starter kit for Next.js with orpc integration.",
 }
 
+//export async function generateStaticParams() {
+//	return locales.map((locale) => ({ locale })); //for this project not work, but if u using next-intl with routing, or with some of business logic u can enable this
+//}
+
 export default function LocaleLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const fontVariables = Object.values(fonts).map((font) => font.variable).join(" ");
 
 	return (
 		<html suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${fontVariables} antialiased`}
 				cz-shortcut-listen="true"
 			>
 				<NextIntlClientProvider>

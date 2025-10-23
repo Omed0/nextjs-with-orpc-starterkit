@@ -39,6 +39,9 @@
       "@/messages/*": [
         "./src/messages/*"
       ],
+      "@/public/*": [
+        "./public/*"
+      ]
     }
   },
   "include": [

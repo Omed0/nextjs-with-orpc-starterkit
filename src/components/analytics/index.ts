@@ -1,9 +1,9 @@
-export { AnalyticsManager } from "./analytics-manager";
-export { AnalyticsMetrics, MetricCard } from "./analytics-metrics";
+export { AnalyticsManager } from "@/components/analytics/analytics-manager";
+export { AnalyticsMetrics, MetricCard } from "@/components/analytics/analytics-metrics";
 export {
   TopEventsTable,
   TopPagesTable,
   RecentEventsTable,
   BrowserStatsTable,
   DeviceStatsTable,
-} from "./analytics-tables";
+} from "@/components/analytics/analytics-tables";

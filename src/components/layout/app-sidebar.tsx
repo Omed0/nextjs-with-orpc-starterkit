@@ -31,6 +31,8 @@ import UserMenu from "./user-menu";
 import LocaleSwitcher from "./locale-switcher";
 import { Separator } from "@/components/ui/separator";
 import { env } from "@/lib/utils/env";
+import { useLocale } from "next-intl";
+import { isRTLLocale } from "@/i18n/config";
 
 // Menu items configuration
 const menuItems = [
@@ -73,9 +75,10 @@ const menuItems = [
 
 export function AppSidebar() {
     const pathname = usePathname();
+    const locale = useLocale();
 
     return (
-        <Sidebar>
+        <Sidebar side={isRTLLocale(locale) ? "right" : "left"}>
             <SidebarHeader>
                 <div className="flex items-center gap-2 p-2">
                     <Menu className="h-5 w-5" />

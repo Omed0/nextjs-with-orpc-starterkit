@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/orpc";
-import { AnalyticsMetrics } from "./analytics-metrics";
+import { AnalyticsMetrics } from "@/components/analytics/analytics-metrics";
 import {
     TopEventsTable,
     TopPagesTable,
     RecentEventsTable,
     BrowserStatsTable,
     DeviceStatsTable,
-} from "./analytics-tables";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/components/analytics/analytics-tables";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Calendar } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,6 +32,7 @@ export function AnalyticsManager() {
     const {
         data: metricsData,
         isLoading: metricsLoading,
+        isRefetching: metricsRefetching,
         refetch: refetchMetrics,
     } = useQuery({
         queryKey: ["analytics", "overview", dateRange],
@@ -43,6 +44,7 @@ export function AnalyticsManager() {
     const {
         data: eventsData,
         isLoading: eventsLoading,
+        isRefetching: eventsRefetching,
         refetch: refetchEvents,
     } = useQuery({
         queryKey: ["analytics", "top-events", dateRange],
@@ -55,6 +57,7 @@ export function AnalyticsManager() {
     const {
         data: pagesData,
         isLoading: pagesLoading,
+        isRefetching: pagesRefetching,
         refetch: refetchPages,
     } = useQuery({
         queryKey: ["analytics", "top-pages", dateRange],
@@ -66,6 +69,7 @@ export function AnalyticsManager() {
     const {
         data: recentData,
         isLoading: recentLoading,
+        isRefetching: recentRefetching,
         refetch: refetchRecent,
     } = useQuery({
         queryKey: ["analytics", "recent-events"],
@@ -77,6 +81,7 @@ export function AnalyticsManager() {
     const {
         data: browsersData,
         isLoading: browsersLoading,
+        isRefetching: browsersRefetching,
         refetch: refetchBrowsers,
     } = useQuery({
         queryKey: ["analytics", "browsers", dateRange],
@@ -88,6 +93,7 @@ export function AnalyticsManager() {
     const {
         data: devicesData,
         isLoading: devicesLoading,
+        isRefetching: devicesRefetching,
         refetch: refetchDevices,
     } = useQuery({
         queryKey: ["analytics", "devices", dateRange],
@@ -95,13 +101,15 @@ export function AnalyticsManager() {
         refetchInterval: 30000,
     });
 
-    const handleRefreshAll = () => {
-        refetchMetrics();
-        refetchEvents();
-        refetchPages();
-        refetchRecent();
-        refetchBrowsers();
-        refetchDevices();
+    const handleRefreshAll = async () => {
+        await Promise.all([
+            refetchMetrics(),
+            refetchEvents(),
+            refetchPages(),
+            refetchRecent(),
+            refetchBrowsers(),
+            refetchDevices(),
+        ]);
     };
 
     const isLoading =
@@ -111,6 +119,14 @@ export function AnalyticsManager() {
         recentLoading ||
         browsersLoading ||
         devicesLoading;
+
+    const isRefetching =
+        metricsRefetching ||
+        eventsRefetching ||
+        pagesRefetching ||
+        recentRefetching ||
+        browsersRefetching ||
+        devicesRefetching;
 
     return (
         <div className="space-y-6">
@@ -145,12 +161,12 @@ export function AnalyticsManager() {
 
                     <Button
                         onClick={handleRefreshAll}
-                        disabled={isLoading}
+                        disabled={isLoading || isRefetching}
                         variant="outline"
                     //size="sm"
                     >
                         <RefreshCw
-                            className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                            className={`mr-2 h-4 w-4 ${isLoading || isRefetching ? "animate-spin" : ""}`}
                         />
                         Refresh
                     </Button>

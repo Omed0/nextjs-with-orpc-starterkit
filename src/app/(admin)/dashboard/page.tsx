@@ -10,13 +10,10 @@ import {
 	BarChart3,
 	Users,
 	FileText,
-	TrendingUp,
 	Activity,
-	Clock,
-	CheckCircle2,
-	AlertCircle,
 } from "lucide-react";
-import { textToAsciiArt } from "@/lib/utils/ascii-art";
+import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 
 export default async function Dashboard() {
 	const [sessions, privateData] = await Promise.all([
@@ -26,32 +23,51 @@ export default async function Dashboard() {
 	const user = sessions.session.user;
 
 	// Generate ASCII art for welcome message
-	const asciiArt = textToAsciiArt("NEXT.JS KIT WITH ORPC", {
-		spacing: 0,
-		uppercase: true,
-	});
+	const asciiArt = `
+ ███╗   ██╗███████╗██╗  ██╗████████╗     ██╗███████╗
+ ████╗  ██║██╔════╝╚██╗██╔╝╚══██╔══╝     ██║██╔════╝
+ ██╔██╗ ██║█████╗   ╚███╔╝    ██║        ██║███████╗
+ ██║╚██╗██║██╔══╝   ██╔██╗    ██║   ██   ██║╚════██║
+ ██║ ╚████║███████╗██╔╝ ██╗   ██║   ╚█████╔╝███████║
+ ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝   ╚═╝    ╚════╝ ╚══════╝
+
+ ██╗  ██╗██╗████████╗    ██╗    ██╗██╗████████╗██╗  ██╗
+ ██║ ██╔╝██║╚══██╔══╝    ██║    ██║██║╚══██╔══╝██║  ██║
+ █████╔╝ ██║   ██║       ██║ █╗ ██║██║   ██║   ███████║
+ ██╔═██╗ ██║   ██║       ██║███╗██║██║   ██║   ██╔══██║
+ ██║  ██╗██║   ██║       ╚███╔███╔╝██║   ██║   ██║  ██║
+ ╚═╝  ╚═╝╚═╝   ╚═╝        ╚══╝╚══╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝
+
+	██████╗ ██████╗ ██████╗  ██████╗
+ ██╔═══██╗██╔══██╗██╔══██╗██╔════╝
+ ██║   ██║██████╔╝██████╔╝██║     
+ ██║   ██║██╔══██╗██╔═══╝ ██║     
+ ╚██████╔╝██║  ██║██║     ╚██████╗
+	╚═════╝ ╚═╝  ╚═╝╚═╝      ╚═════╝
+ `;
 
 	return (
-		<div className="container mx-auto py-8 px-4 max-w-7xl">
-			<div className="space-y-8">
+		<div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 max-w-7xl">
+			<div className="space-y-6">
 				{/* Welcome Section with ASCII Art */}
-				<div className="space-y-4">
-					<div className="space-y-2">
-						<h1 className="text-3xl font-bold tracking-tight">
+				<div className="space-y-2">
+					<div className="space-y-1">
+						<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
 							Welcome back, {user.name}! 👋
 						</h1>
-						<p className="text-muted-foreground">
+						<p className="text-sm sm:text-base text-muted-foreground">
 							Here's what's happening with your system today
 						</p>
 					</div>
 
 					{/* ASCII Art Banner */}
-					<Card className="bg-gradient-to-br from-primary/5 via-primary/10 to-background border-primary/20">
-						<CardContent className="pt-6">
-							<pre className="font-mono text-[8px] sm:text-xs leading-tight text-primary overflow-x-auto">
+					<Card dir="ltr" className="bg-gradient-to-br from-primary/5 via-primary/10 to-background border-primary/20 font-mono text-center">
+						<CardContent>
+							{/* Make ASCII responsive and allow horizontal scrolling on very small screens */}
+							<pre className="text-[6px] sm:text-[8px] md:text-xs lg:text-sm leading-tight text-primary overflow-x-auto whitespace-pre">
 								{asciiArt}
 							</pre>
-							<p className="mt-4 text-sm text-muted-foreground text-center">
+							<p className="mt-3 text-sm sm:text-base text-muted-foreground">
 								{privateData.message}
 							</p>
 						</CardContent>
@@ -67,11 +83,12 @@ export default async function Dashboard() {
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-							<QuickAction title="View Analytics" href="/admin/analytic" />
-							<QuickAction title="Manage Files" href="/admin/upload-file" />
-							<QuickAction title="Check Queues" href="/admin/queues" />
-							<QuickAction title="View Todos" href="/todos" />
+						{/* Responsive grid: 1 col mobile, 2 cols small, 3 cols md, 4 cols lg */}
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+							<QuickAction title="View Analytics" href="/admin/analytic" Icon={BarChart3} />
+							<QuickAction title="Manage Files" href="/admin/upload-file" Icon={FileText} />
+							<QuickAction title="Check Queues" href="/admin/queues" Icon={Activity} />
+							<QuickAction title="View Todos" href="/todos" Icon={Users} />
 						</div>
 					</CardContent>
 				</Card>
@@ -80,14 +97,23 @@ export default async function Dashboard() {
 	);
 }
 
-
-function QuickAction({ title, href }: { title: string; href: string }) {
+function QuickAction({
+	title,
+	href,
+	Icon,
+}: {
+	title: string;
+	href: string;
+	Icon?: LucideIcon;
+}) {
 	return (
-		<a
-			href={href}
-			className="flex items-center justify-center p-4 rounded-lg border bg-card hover:bg-accent hover:border-primary/50 transition-all text-sm font-medium"
+		<Link
+			href={href as any}
+			className="w-full flex flex-col sm:flex-row items-center gap-3 p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent hover:border-primary/50 transition-all text-sm sm:text-base font-medium justify-center text-center"
+			aria-label={title}
 		>
-			{title}
-		</a>
+			{Icon ? <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary/90" /> : null}
+			<span className="whitespace-nowrap">{title}</span>
+		</Link>
 	);
 }

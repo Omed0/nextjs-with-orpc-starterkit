@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { createQueryClient } from "./client";
-import { useState } from "react";
+import { createQueryClient } from "@/lib/react-query/client";
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { useLocale } from "next-intl";
+import { isRTLLocale } from "@/i18n/config";
+import { cn } from "../utils/utils";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
 	const [queryClient] = useState(() => createQueryClient())
+	const locale = useLocale()
+
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider
@@ -16,7 +21,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 				enableSystem
 				disableTransitionOnChange
 			>
-				{children}
+				<div
+					className={cn(isRTLLocale(locale) ? "font-speda" : "font-mono")}
+					dir={isRTLLocale(locale) ? "rtl" : "ltr"}
+				>
+					{children}
+				</div>
 				<ReactQueryDevtools />
 			</ThemeProvider>
 		</QueryClientProvider>

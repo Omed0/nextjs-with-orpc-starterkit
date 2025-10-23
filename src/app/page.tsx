@@ -1,7 +1,7 @@
 import { client } from "@/lib/orpc";
 import { getTranslations } from "next-intl/server";
 
-const TITLE_TEXT = `
+const asciiArt = `
  ███╗   ██╗███████╗██╗  ██╗████████╗     ██╗███████╗
  ████╗  ██║██╔════╝╚██╗██╔╝╚══██╔══╝     ██║██╔════╝
  ██╔██╗ ██║█████╗   ╚███╔╝    ██║        ██║███████╗
@@ -30,7 +30,11 @@ export default async function Home() {
 
 	return (
 		<div className="container mx-auto max-w-3xl px-4 py-2">
-			<pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
+			<pre
+				dir="ltr"
+				className="text-[6px] sm:text-[8px] md:text-xs lg:text-sm leading-tight text-primary overflow-x-auto whitespace-pre">
+				{asciiArt}
+			</pre>
 			<div className="grid gap-6">
 				<section className="rounded-lg border p-4">
 					<h2 className="mb-2 font-medium">{t.raw("status")}</h2>

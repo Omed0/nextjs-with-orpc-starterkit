@@ -133,7 +133,7 @@ export function registerBackupWorker() {
         // Use platform-appropriate backup directory
         const backupDir =
           process.platform === "win32"
-            ? path.join(process.cwd(), "backups")
+            ? path.join("C:\\Temp", "backups")
             : "/tmp/backups";
 
         // Ensure backup directory exists
@@ -188,6 +188,8 @@ export function registerBackupWorker() {
         } catch (error) {
           console.error("Backup process failed:", error);
           throw error;
+        } finally {
+          fs.rmSync(backupDir, { recursive: true, force: true }); // Clean up backup directory
         }
       }
     ),
